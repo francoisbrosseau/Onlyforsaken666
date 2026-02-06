@@ -103,9 +103,58 @@ body::after {
     radial-gradient(circle at center, rgba(0,0,0,0.05), rgba(0,0,0,0.35) 70%),
     linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.25));
 }
+    /* Top logo/banner */
+.logo {
+  position: fixed;
+  top: 5vh;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.logo .brand {
+  display: inline-block;
+  font-family: serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  font-size: clamp(28px, 4vw, 56px);
+  color: rgba(255,255,255,0.92);
+  text-shadow:
+    0 0 12px rgba(255, 0, 120, 0.35),
+    0 0 26px rgba(120, 0, 255, 0.25),
+    0 0 44px rgba(0, 255, 255, 0.12);
+}
+
+.logo .sub {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+}
+
+/* Slight “flicker” animation (subtle) */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.92; }
+  50% { opacity: 0.8; }
+  55% { opacity: 0.95; }
+}
+
+.logo .brand {
+  animation: flicker 6.5s infinite;
+}
+
  </style>
 </head>
 <body>
+<div class="logo">
+  <div class="brand">ONLYFORSAKEN</div>
+  <div class="sub">do not look away</div>
+</div>
 
   <div class="gate">
     <button class="enter-btn" onclick="enterGate()">ENTER</button>
@@ -130,6 +179,7 @@ body::after {
 </body>
 
 </html>
+
 
 
 
