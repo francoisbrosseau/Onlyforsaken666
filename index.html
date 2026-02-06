@@ -82,7 +82,28 @@
  </style>
 </head>
 <body>
+
+  <div class="gate">
+    <button class="enter-btn" onclick="enterGate()">ENTER</button>
+  </div>
+
+  <div class="hint">restricted access</div>
+
   <div class="whisper">something watches back</div>
+
+  <script>
+    function enterGate() {
+      const pass = prompt("Enter the password");
+      if (pass === "forsaken") {
+        alert("You may proceed.");
+        // later we can redirect or unlock content
+      } else {
+        alert("Access denied.");
+      }
+    }
+  </script>
+
 </body>
 
 </html>
+
