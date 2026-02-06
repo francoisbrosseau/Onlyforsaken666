@@ -79,6 +79,19 @@
   z-index: 2;
   pointer-events: none;
 }
+    /* Desktop framing fix (wide screens) */
+@media (min-width: 900px) {
+  body::before {
+    background-position: center 30%;
+  }
+}
+
+/* Very wide monitors */
+@media (min-width: 1400px) {
+  body::before {
+    background-position: center 25%;
+  }
+}
  </style>
 </head>
 <body>
@@ -106,4 +119,5 @@
 </body>
 
 </html>
+
 
