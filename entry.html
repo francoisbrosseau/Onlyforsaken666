@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ONLYFORSAKEN — Level 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+
 
   <style>
     :root{
@@ -107,28 +109,31 @@
     }
 
     h1{
-      text-shadow: 0 0 28px rgba(255,255,255,0.10);
-      margin: 0 0 14px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      font-size: clamp(22px, 3.4vw, 34px);
-      color: var(--text);
-      user-select:none;
-    }
+  font-family: "Cinzel Decorative", serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: clamp(26px, 4vw, 40px);
+  color: #e8e2d6;
+  animation: candleFlicker 3.5s infinite ease-in-out;
+}
+
+
 
     .story{
-      margin: 0 auto 22px;
-      max-width: 56ch;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
+  font-family: "Cormorant Garamond", serif;
+  font-size: 17px;
+  line-height: 1.65;
+  letter-spacing: 0.03em;
+  color: rgba(255,255,255,0.75);
+  animation: candleFlicker 5s infinite ease-in-out;
+}
+
 
     .story em{
-      font-style: italic;
-      color: rgba(255,255,255,0.78);
-      text-shadow: 0 0 14px rgba(255,255,255,0.12);
-    }
+  font-style: normal;
+  color: #d2c7b3;
+  text-shadow: 0 0 10px rgba(120,0,0,0.35);
+}
 
     .final{
       margin: 10px auto 0;
@@ -211,6 +216,15 @@
 
     .fadeOut{ animation: fade 700ms ease forwards; }
     @keyframes fade{ to{ opacity:0; transform: translateY(6px); } }
+
+    @keyframes candleFlicker {
+  0%   { opacity: 0.92; text-shadow: 0 0 6px rgba(255,255,255,0.10), 0 0 18px rgba(120,0,0,0.18); }
+  25%  { opacity: 1;    text-shadow: 0 0 10px rgba(255,255,255,0.18), 0 0 28px rgba(120,0,0,0.28); }
+  50%  { opacity: 0.96; text-shadow: 0 0 7px rgba(255,255,255,0.12), 0 0 20px rgba(120,0,0,0.22); }
+  75%  { opacity: 1;    text-shadow: 0 0 12px rgba(255,255,255,0.20), 0 0 34px rgba(120,0,0,0.32); }
+  100% { opacity: 0.94; text-shadow: 0 0 6px rgba(255,255,255,0.10), 0 0 18px rgba(120,0,0,0.18); }
+}
+
   </style>
 </head>
 
