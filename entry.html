@@ -26,6 +26,7 @@
       align-items:center;
       justify-content:center;
 
+      /* ✅ Your background image */
       background-image: url("entry.jpg");
       background-size: cover;
       background-position: center 30%;
@@ -280,16 +281,36 @@
       el.className = "glyph" + (isFlash ? " flash" : "");
       el.textContent = ch;
 
-      const x = 8 + Math.random() * 84;
-      const y = 10 + Math.random() * 80;
+      // Peripheral positioning (edges)
+      const pickEdgeBand = () => {
+        const r = Math.random();
+
+        // Left or right edge
+        if (r < 0.50) {
+          const x = (r < 0.25)
+            ? (4 + Math.random() * 14)    // left 4–18%
+            : (82 + Math.random() * 14);  // right 82–96%
+          const y = 10 + Math.random() * 80;
+          return { x, y };
+        }
+
+        // Top or bottom edge
+        const y = (r < 0.75)
+          ? (5 + Math.random() * 14)      // top 5–19%
+          : (81 + Math.random() * 14);    // bottom 81–95%
+        const x = 12 + Math.random() * 76;
+        return { x, y };
+      };
+
+      const { x, y } = pickEdgeBand();
       el.style.left = x + "%";
       el.style.top  = y + "%";
 
-      const rot = (-8 + Math.random() * 16).toFixed(2);
+      const rot = (-10 + Math.random() * 20).toFixed(2);
       el.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
 
       specters.appendChild(el);
-      setTimeout(() => el.remove(), 1500);
+      setTimeout(() => el.remove(), 1700);
     }
 
     function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
@@ -306,33 +327,32 @@
     async function flashLetterNTimes(letter, n){
       for (let i = 0; i < n; i++){
         spawnGlyph(letter, true);
-        await wait(220);
-        await wait(120);
+        await wait(420);  // slower on
+        await wait(260);  // slower off
       }
     }
 
     function startAmbientDecoys(){
       setInterval(() => {
-        if (Math.random() < 0.35) {
+        if (Math.random() < 0.22) {
           const junk = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
           spawnGlyph(junk[Math.floor(Math.random() * junk.length)], false);
         }
-      }, 650);
+      }, 1100);
     }
 
     async function runSequenceForever(){
       startAmbientDecoys();
 
       while(true){
-        // Randomize group order each cycle
         const randomized = shuffle(sequence);
 
         for (const item of randomized){
           await flashLetterNTimes(item.ch, item.flashes);
-          await wait(850);
+          await wait(1400); // slower between groups
         }
 
-        await wait(1200);
+        await wait(2200); // slower between cycles
       }
     }
     runSequenceForever();
