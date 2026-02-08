@@ -11,7 +11,7 @@
     :root{
       --text: rgba(255,255,255,0.92);
       --muted: rgba(255,255,255,0.78);
-      --hint: rgba(255,255,255,0.40);
+      --hint: rgba(255,255,255,0.42);
       --shadow: rgba(0,0,0,0.72);
     }
 
@@ -29,25 +29,25 @@
       font-family: Georgia, "Times New Roman", serif;
     }
 
-    /* Background layer */
+    /* ✅ Background: brighter + crisper */
     .bg{
       position:absolute; inset:0;
       background-image: url("Level3.jpg"); /* ✅ your level 3 image */
       background-size: cover;
       background-position: center 40%;
       background-repeat: no-repeat;
-      filter: brightness(1.12) contrast(1.18) saturate(1.05);
+      filter: brightness(1.22) contrast(1.18) saturate(1.06);
       transform: scale(1.02);
       z-index:0;
     }
 
-    /* Overlay */
+    /* ✅ Overlay: less heavy so statue is visible */
     .hero::before{
       content:"";
       position:absolute; inset:0;
       background:
-        radial-gradient(circle at center, rgba(0,0,0,0.10), rgba(0,0,0,0.58)),
-        linear-gradient(to bottom, rgba(0,0,0,0.22), rgba(0,0,0,0.70));
+        radial-gradient(circle at 50% 42%, rgba(0,0,0,0.06), rgba(0,0,0,0.52)),
+        linear-gradient(to bottom, rgba(0,0,0,0.16), rgba(0,0,0,0.62));
       z-index:1;
       pointer-events:none;
     }
@@ -63,63 +63,16 @@
       z-index:1;
     }
 
-    /* Hotspots + plaque layer */
+    /* ✅ Hotspots layer (MUST allow pointer events) */
     .hotspots{
       position:absolute;
       inset:0;
       z-index:2;
-      pointer-events:none; /* spots will re-enable pointer events */
+      pointer-events:auto; /* ✅ FIXED: hover works now */
     }
 
-    /* ✅ PLAQUE on pedestal */
-    .plaque{
-      position:absolute;
-      left: 50%;
-      top: 62.8%;                 /* tuned to your pedestal */
-      transform: translate(-50%, -50%);
-      width: min(520px, 86vw);
-      padding: 14px 16px;
-      border-radius: 10px;
-
-      /* plaque look */
-      background: linear-gradient(180deg,
-        rgba(255,255,255,0.06),
-        rgba(0,0,0,0.18)
-      );
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow:
-        0 10px 30px rgba(0,0,0,0.45),
-        inset 0 1px 0 rgba(255,255,255,0.06);
-      backdrop-filter: blur(1px);
-
-      /* engraved text effect */
-      font-family: "Cormorant Garamond", serif;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      text-align: center;
-
-      color: rgba(255,255,255,0.22);
-      text-shadow:
-        0 1px 0 rgba(0,0,0,0.85),
-        0 -1px 0 rgba(255,255,255,0.06);
-
-      opacity: 0.88;
-      pointer-events:none; /* stays purely visual */
-      user-select:none;
-    }
-
-    .plaque .line1{
-      font-size: 12px;
-      margin-bottom: 6px;
-      color: rgba(255,255,255,0.26);
-    }
-    .plaque .line2{
-      font-size: 15px;
-      color: rgba(255,255,255,0.20);
-    }
-
+    /* The hidden letter zones */
     .spot{
-      pointer-events:auto; /* ✅ re-enable interaction */
       position:absolute;
       width: 110px;
       height: 110px;
@@ -130,15 +83,19 @@
       background: rgba(255,255,255,0.00);
       outline: none;
       -webkit-tap-highlight-color: transparent;
+      cursor: default;
     }
 
     .spot span{
       font-family: "Cinzel Decorative", serif;
       font-size: 38px;
       letter-spacing: 0.08em;
+
+      /* nearly invisible normally */
       color: rgba(255,255,255,0.05);
-      text-shadow: 0 0 0 rgba(255,255,255,0);
       opacity: 0.10;
+      text-shadow: 0 0 0 rgba(255,255,255,0);
+
       transform: translateY(1px);
       transition: opacity 220ms ease, color 220ms ease, text-shadow 220ms ease, transform 220ms ease;
       user-select:none;
@@ -174,6 +131,7 @@
       padding: 42px 22px;
       text-align: center;
       filter: drop-shadow(0 16px 22px var(--shadow));
+      pointer-events:auto;
     }
 
     .kicker{
@@ -210,7 +168,7 @@
       line-height: 1.65;
       letter-spacing: 0.02em;
       color: var(--muted);
-      margin: 0 auto 18px;
+      margin: 0 auto 16px;
       max-width: 62ch;
       animation: candleFlicker 5s infinite ease-in-out;
     }
@@ -221,8 +179,46 @@
       text-shadow: 0 0 10px rgba(140,0,0,0.22);
     }
 
-    .riddle{
-      margin: 16px auto 22px;
+    /* ✅ Plaque INSIDE the story section (below story) */
+    .plaque{
+      margin: 14px auto 18px;
+      width: min(560px, 92vw);
+      padding: 14px 16px;
+      border-radius: 12px;
+
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.06),
+        rgba(0,0,0,0.18)
+      );
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 10px 26px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      backdrop-filter: blur(1px);
+
+      text-align:center;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      user-select:none;
+    }
+
+    .plaque .title{
+      font-family: "Cinzel Decorative", serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.32);
+      margin-bottom: 6px;
+    }
+    .plaque .riddletext{
+      font-family: "Cormorant Garamond", serif;
+      font-size: 16px;
+      color: rgba(255,255,255,0.22);
+      text-shadow:
+        0 1px 0 rgba(0,0,0,0.85),
+        0 -1px 0 rgba(255,255,255,0.06);
+    }
+
+    .riddlehint{
+      margin: 10px auto 22px;
       max-width: 64ch;
       color: var(--hint);
       font-size: 12px;
@@ -288,7 +284,6 @@
     @media (max-width: 600px){
       .spot{ width: 120px; height: 120px; }
       .spot span{ font-size: 40px; }
-      .plaque{ top: 64.3%; }
     }
   </style>
 </head>
@@ -297,20 +292,18 @@
   <main class="hero">
     <div class="bg" aria-hidden="true"></div>
 
+    <!-- ✅ TRUTH hidden ON the statue/pedestal (hover/tap) -->
     <div class="hotspots" aria-hidden="true">
-      <!-- ✅ Plaque text ON the statue/pedestal -->
-      <div class="plaque">
-        <div class="line1">THE EYE THAT FOLLOWS</div>
-        <div class="line2">WHAT REMAINS WHEN THE MASK BURNS?</div>
-      </div>
-
-      <!-- ✅ TRUTH hidden ON the statue/pedestal -->
-      <!-- Coordinates tuned to your image (center statue/pedestal) -->
-      <div class="spot" data-letter="T" style="left:49.8%; top:24.9%;"><span>T</span></div>
-      <div class="spot" data-letter="R" style="left:44.7%; top:31.7%;"><span>R</span></div>
-      <div class="spot" data-letter="U" style="left:54.9%; top:31.7%;"><span>U</span></div>
-      <div class="spot" data-letter="T" style="left:49.8%; top:47.9%;"><span>T</span></div>
-      <div class="spot" data-letter="H" style="left:49.8%; top:54.7%;"><span>H</span></div>
+      <!-- Hood highlight -->
+      <div class="spot" style="left:49.8%; top:24.9%;" tabindex="-1"><span>T</span></div>
+      <!-- Left shoulder -->
+      <div class="spot" style="left:44.7%; top:31.7%;" tabindex="-1"><span>R</span></div>
+      <!-- Right shoulder -->
+      <div class="spot" style="left:54.9%; top:31.7%;" tabindex="-1"><span>U</span></div>
+      <!-- Pedestal glow -->
+      <div class="spot" style="left:49.8%; top:47.9%;" tabindex="-1"><span>T</span></div>
+      <!-- Lower pedestal -->
+      <div class="spot" style="left:49.8%; top:54.7%;" tabindex="-1"><span>H</span></div>
     </div>
 
     <section class="wrap" id="wrap">
@@ -327,7 +320,13 @@
         The castle offers no directions. Only hints… <em>if you dare to look where you shouldn’t.</em>
       </p>
 
-      <div class="riddle">
+      <!-- ✅ Plaque now appears BELOW the story -->
+      <div class="plaque">
+        <div class="title">Engraved on the pedestal</div>
+        <div class="riddletext">What remains when the mask burns?</div>
+      </div>
+
+      <div class="riddlehint">
         it won’t speak aloud. it hides in plain sight. let the stone confess.
       </div>
 
