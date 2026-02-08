@@ -1,1 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ONLYFORSAKEN — Level 3</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --text: rgba(255,255,255,0.90);
+      --muted: rgba(255,255,255,0.52);
+      --shadow: rgba(0,0,0,0.65);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; margin:0; background:#000; font-family: Georgia, "Times New Roman", serif; }
+
+    /* HERO */
+    .hero{
+      min-height:100vh;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#000;
+    }
+
+    /* ✅ Background image as its OWN layer so we can sharpen/brighten it */
+    .bg{
+      position:absolute;
+      inset:0;
+      background-image: url("level3.jpg"); /* <- your level3 image filename */
+      background-size: cover;
+      background-position: center 30%;
+      background-repeat: no-repeat;
+
+      /* sharper + brighter without affecting UI */
+      filter: brightness(1.14) contrast(1.18) saturate(1.06);
+      transform: scale(1.02); /* hides edge gaps from filter */
+      z-index: 0;
+    }
+
+    /* Dark overlay (LIGHTER so image is visible) */
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at center, rgba(0,0,0,0.06), rgba(0,0,0,0.42)),
+        linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.48));
+      z-index: 1;
+      pointer-events:none;
+    }
+
+    /* Subtle grain */
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity: .12;
+      pointer-events:none;
+      z-index: 1;
+    }
+
+    /* Floating letters layer */
+    #specters{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index: 2;
+    }
+
+    .glyph{
+      position:absolute;
+      font-size: clamp(18px, 2.0vw, 28px);
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.18);
+      text-shadow: 0 0 18px rgba(255,255,255,0.16);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1);
+      filter: blur(0.2px);
+      animation: floatFade 1.6s ease forwards;
+      user-select:none;
+      will-change: transform, opacity;
+    }
+
+    .glyph.flash{
+      color: rgba(255,255,255,0.94);
+      text-shadow: 0 0 34px rgba(255,255,255,0.40);
+    }
+
+    @keyframes floatFade{
+      0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.98); }
+      20%  { opacity: 0.96; }
+      100% { opacity: 0; transform: translate(-50%, -56%) scale(1.03); }
+    }
+
+    /* UI */
+    .wrap{
+      position: relative;
+      z-index: 3;
+      width: min(760px, 92vw);
+      padding: 40px 22px;
+      text-align: center;
+      filter: drop-shadow(0 14px 20px var(--shadow));
+    }
+
+    .kicker{
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      margin: 0 0 10px;
+      user-select:none;
+    }
+
+    @keyframes candleFlicker {
+      0%   { opacity: 0.92; text-shadow: 0 0 6px rgba(255,255,255,0.10), 0 0 18px rgba(120,0,0,0.18); }
+      25%  { opacity: 1;    text-shadow: 0 0 10px rgba(255,255,255,0.18), 0 0 28px rgba(120,0,0,0.28); }
+      50%  { opacity: 0.96; text-shadow: 0 0 7px rgba(255,255,255,0.12), 0 0 20px rgba(120,0,0,0.22); }
+      75%  { opacity: 1;    text-shadow: 0 0 12px rgba(255,255,255,0.20), 0 0 34px rgba(120,0,0,0.32); }
+      100% { opacity: 0.94; text-shadow: 0 0 6px rgba(255,255,255,0.10), 0 0 18px rgba(120,0,0,0.18); }
+    }
+
+    h1{
+      font-family: "Cinzel Decorative", serif;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: clamp(26px, 4vw, 40px);
+      color: #e8e2d6;
+      margin: 0 0 14px;
+      animation: candleFlicker 3.5s infinite ease-in-out;
+    }
+
+    .story{
+      font-family: "Cormorant Garamond", serif;
+      font-size: 17px;
+      line-height: 1.65;
+      letter-spacing: 0.03em;
+      color: rgba(255,255,255,0.78);
+      margin: 0 auto 22px;
+      max-width: 56ch;
+      animation: candleFlicker 5s infinite ease-in-out;
+    }
+
+    .story em{
+      font-style: normal;
+      color: #d2c7b3;
+      text-shadow: 0 0 10px rgba(120,0,0,0.35);
+    }
+
+    .final{
+      margin: 10px auto 0;
+      max-width: 56ch;
+      color: rgba(255,255,255,0.72);
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      font-size: 11px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 450ms ease, transform 450ms ease;
+      text-shadow: 0 0 18px rgba(255,255,255,0.12);
+      user-select: none;
+    }
+    .final.show{ opacity: 1; transform: translateY(0); }
+
+    .hint{
+      margin: 18px auto 24px;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 11px;
+      user-select:none;
+    }
+
+    .gate{
+      display:flex;
+      gap: 10px;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top: 4px;
+    }
+
+    input[type="password"]{
+      width: min(340px, 86vw);
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.34);
+      color: var(--text);
+      outline: none;
+      letter-spacing: 0.10em;
+      font-size: 14px;
+    }
+    input[type="password"]::placeholder{ color: rgba(255,255,255,0.28); }
+
+    button{
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor:pointer;
+    }
+
+    .msg{
+      margin-top: 14px;
+      min-height: 18px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.08em;
+      font-size: 12px;
+    }
+
+    .wrong{ animation: shake 340ms ease; }
+    @keyframes shake{
+      0%{ transform: translateX(0); }
+      20%{ transform: translateX(-6px); }
+      40%{ transform: translateX(6px); }
+      60%{ transform: translateX(-4px); }
+      80%{ transform: translateX(4px); }
+      100%{ transform: translateX(0); }
+    }
+
+    .fadeOut{ animation: fade 700ms ease forwards; }
+    @keyframes fade{ to{ opacity:0; transform: translateY(6px); } }
+  </style>
+</head>
+
+<body>
+  <main class="hero">
+    <div class="bg" aria-hidden="true"></div>
+    <div id="specters" aria-hidden="true"></div>
+
+    <section class="wrap" id="wrap">
+      <div class="kicker">Level 3</div>
+      <h1>The Castle Remembers</h1>
+
+      <p class="story">
+        The door shuts without a sound—yet the air grows heavier, as if the stone itself
+        has been holding its breath for centuries.
+        <br><br>
+        Ahead: arches drowned in soot, prayer-candles still warm, and a corridor that
+        shouldn’t exist. Each step feels borrowed. Each heartbeat feels <em>counted</em>.
+        <br><br>
+        You came for the relic they buried in the dark—an ancient gem with a name that
+        was erased from every tongue that spoke it. They say it doesn’t shine.
+        It <em>stares</em>.
+        <br><br>
+        If you want it, you will not be guided by signs or maps.
+        Only by what you see and trust.
+      </p>
+
+      <p class="final" id="finalLine">So it knows your name.</p>
+
+      <div class="hint">the dark speaks in numbers</div>
+
+      <div class="gate">
+        <input id="pw" type="password" placeholder="password…" autocomplete="off" />
+        <button id="btn">ENTER</button>
+      </div>
+
+      <div class="msg" id="msg"></div>
+    </section>
+  </main>
+
+  <script>
+    const PASSWORD = "DESCEND";
+
+    // D(1), E(2), S(3), C(4), E(5), N(6), D(7)
+    const sequence = [
+      { ch: "D", flashes: 1 },
+      { ch: "E", flashes: 2 },
+      { ch: "S", flashes: 3 },
+      { ch: "C", flashes: 4 },
+      { ch: "E", flashes: 5 },
+      { ch: "N", flashes: 6 },
+      { ch: "D", flashes: 7 }
+    ];
+
+    const specters = document.getElementById("specters");
+
+    function spawnGlyph(ch, isFlash){
+      const el = document.createElement("div");
+      el.className = "glyph" + (isFlash ? " flash" : "");
+      el.textContent = ch;
+
+      // Peripheral positioning (edges)
+      const pickEdgeBand = () => {
+        const r = Math.random();
+
+        // Left or right edge
+        if (r < 0.50) {
+          const x = (r < 0.25)
+            ? (4 + Math.random() * 14)    // left 4–18%
+            : (82 + Math.random() * 14);  // right 82–96%
+          const y = 10 + Math.random() * 80;
+          return { x, y };
+        }
+
+        // Top or bottom edge
+        const y = (r < 0.75)
+          ? (5 + Math.random() * 14)      // top 5–19%
+          : (81 + Math.random() * 14);    // bottom 81–95%
+        const x = 12 + Math.random() * 76;
+        return { x, y };
+      };
+
+      const { x, y } = pickEdgeBand();
+      el.style.left = x + "%";
+      el.style.top  = y + "%";
+
+      const rot = (-10 + Math.random() * 20).toFixed(2);
+      el.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
+
+      specters.appendChild(el);
+      setTimeout(() => el.remove(), 1900);
+    }
+
+    function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    function shuffle(arr){
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    async function flashLetterNTimes(letter, n){
+      for (let i = 0; i < n; i++){
+        spawnGlyph(letter, true);
+        await wait(520);  // slower on
+        await wait(320);  // slower off
+      }
+    }
+
+    function startAmbientDecoys(){
+      setInterval(() => {
+        if (Math.random() < 0.22) {
+          const junk = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+          spawnGlyph(junk[Math.floor(Math.random() * junk.length)], false);
+        }
+      }, 1200);
+    }
+
+    async function runSequenceForever(){
+      startAmbientDecoys();
+
+      while(true){
+        const randomized = shuffle(sequence);
+
+        for (const item of randomized){
+          await flashLetterNTimes(item.ch, item.flashes);
+          await wait(1500); // slower between groups
+        }
+
+        await wait(2400); // slower between cycles
+      }
+    }
+    runSequenceForever();
+
+    // Gate logic
+    const wrap = document.getElementById("wrap");
+    const pw = document.getElementById("pw");
+    const btn = document.getElementById("btn");
+    const msg = document.getElementById("msg");
+
+    function check(){
+      const val = (pw.value || "").trim().toUpperCase();
+      if (!val) return;
+
+      if (val === PASSWORD){
+        msg.textContent = "…";
+        document.getElementById("finalLine").classList.add("show");
+
+        setTimeout(() => wrap.classList.add("fadeOut"), 650);
+
+        // ✅ Next level
+        setTimeout(() => window.location.href = "level4.html", 1350);
+      } else {
+        msg.textContent = "Not yet.";
+        wrap.classList.remove("wrong");
+        void wrap.offsetWidth;
+        wrap.classList.add("wrong");
+        pw.select();
+      }
+    }
+
+    btn.addEventListener("click", check);
+    pw.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") check();
+    });
+  </script>
+</body>
+</html>
 
