@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ONLYFORSAKEN — Level 6</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --title-font:"Cinzel Decorative", serif;
+      --body-font:"Cormorant Garamond", serif;
+
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.62);
+
+      --shadow: rgba(0,0,0,0.72);
+
+      --maxw: 880px;
+
+      --ok: rgba(170,255,210,0.95);
+      --bad: rgba(255,140,140,0.95);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; margin:0; }
+    body{
+      background:#000;
+      color:var(--text);
+      font-family:var(--body-font);
+      overflow-x:hidden;
+      text-align:center;
+      position:relative;
+    }
+
+    /* === ALWAYS-ON BACKGROUND (NO CUT TO BLACK) === */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-10;
+
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0.38)),
+        url("level6.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 68% 62%;
+    }
+
+    /* soft vignette (light) */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-35%;
+      z-index:-9;
+      pointer-events:none;
+      background: radial-gradient(closest-side at 50% 35%,
+        rgba(0,0,0,0) 55%,
+        rgba(0,0,0,0.35) 90%
+      );
+    }
+
+    /* FULLSCREEN HERO (keeps everything centered) */
+    .hero{
+      min-height:100vh;
+      min-height:100svh;
+      display:grid;
+      place-items:center;
+      padding: clamp(18px, 4vw, 56px);
+      text-align:center;
+    }
+
+    /* Grain overlay (very light; won’t blur the image) */
+    .grain{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:0.07;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+      z-index:-8;
+    }
+
+    @keyframes candleFlicker{
+      0%{ opacity:0.94; transform: translateY(0px); }
+      50%{ opacity:1; transform: translateY(-1px); }
+      100%{ opacity:0.96; transform: translateY(0px); }
+    }
+    .flicker{ animation:candleFlicker 5.2s ease-in-out infinite; }
+
+    /* NO BOX / NO PANEL — just centered content */
+    .wrap{
+      width:min(var(--maxw), 100%);
+      margin: 0 auto;
+      padding: clamp(18px, 3.5vw, 46px);
+      background:none;
+      border:none;
+      box-shadow:none;
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+      text-align:center;
+    }
+
+    h1{
+      margin:0;
+      font-family:var(--title-font);
+      letter-spacing:0.10em;
+      font-size: clamp(32px, 3.8vw, 52px);
+      text-shadow: 0 14px 44px rgba(0,0,0,0.70);
+    }
+
+    .subtitle{
+      margin: 10px 0 0;
+      font-weight:600;
+      font-size: clamp(18px, 2.2vw, 24px);
+      color: rgba(255,255,255,0.80);
+    }
+
+    .divider{
+      height:1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.22), transparent);
+      margin: 20px auto;
+      width: min(720px, 92vw);
+    }
+
+    /* STORY — NO BOX */
+    .story{
+      margin: 0 auto;
+      max-width: 68ch;
+      font-size: clamp(18px, 2.05vw, 22px);
+      line-height: 1.75;
+      color: rgba(255,255,255,0.88);
+    }
+    .story p{ margin: 12px 0; }
+
+    .riddleTitle{
+      font-family:var(--title-font);
+      letter-spacing:0.14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+      margin: 8px 0 10px;
+    }
+
+    .riddle{
+      margin: 0 auto;
+      max-width: 62ch;
+      padding: 14px 18px;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.12); /* very light so it doesn’t look “boxed” */
+      border: 1px solid rgba(255,255,255,0.10);
+      line-height: 1.85;
+      font-size: clamp(18px, 2.05vw, 22px);
+    }
+
+    /* PASSWORD GATE — smaller */
+    .gate{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input[type="password"]{
+      width: min(260px, 82vw);
+      padding: 9px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(0,0,0,0.24);
+      color: var(--text);
+      font-family:var(--body-font);
+      font-size: 18px;
+      outline:none;
+      text-align:center;
+      transition: box-shadow .18s ease, border-color .18s ease;
+    }
+    input[type="password"]:focus{
+      border-color: rgba(255,255,255,0.30);
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.08);
+    }
+
+    button{
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.92);
+      font-family: var(--title-font);
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      font-size: 11px;
+      cursor:pointer;
+      transition: transform .08s ease, background .18s ease, border-color .18s ease;
+    }
+    button:hover{ background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.26); }
+    button:active{ transform: translateY(1px); }
+
+    .hint{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .msg{
+      margin-top: 10px;
+      min-height: 22px;
+      font-size: 15px;
+      letter-spacing: 0.02em;
+    }
+    .msg.ok{ color: var(--ok); }
+    .msg.bad{ color: var(--bad); }
+
+    .foot{
+      margin-top: 16px;
+      color: rgba(255,255,255,0.40);
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+
+    /* If you ever see a leftover .bg element from older versions, kill it */
+    .bg, .vignette{ display:none !important; }
+  </style>
+</head>
+
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="hero">
+    <section class="wrap flicker" aria-label="Level 6">
+      <h1>ONLYFORSAKEN</h1>
+      <div class="subtitle">The castle begins to answer.</div>
+
+      <div class="divider"></div>
+
+      <!-- STORY (unchanged) -->
+      <div class="story">
+        <p>You step forward and the corridor returns your step—late, softer, wrong.</p>
+        <p>The stones are not just holding the sound. They are <em>learning</em> it.</p>
+        <p>A doorway you passed before appears again with the same bent handle, the same stain that never dries, the same cold draft that smells like old iron. Distance stops meaning what it should. Corners lead back to memories you did not agree to revisit.</p>
+        <p>At the end, a slab of black stone waits with a shallow indentation—made for a single word. Not a key. Not a name. A word the castle can repeat until it becomes true.</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="riddleTitle">Riddle</div>
+      <div class="riddle">
+        I speak without a mouth.<br>
+        I answer without a voice.<br>
+        I follow you longer than shadows.<br>
+        What am I?
+      </div>
+
+      <div class="gate" role="group" aria-label="Password gate">
+        <input id="pw" type="password" inputmode="text" autocomplete="off" spellcheck="false"
+               placeholder="Enter the answer…" aria-label="Password" />
+        <button id="enterBtn" type="button">Enter</button>
+      </div>
+
+      <div class="hint">One word. No spaces.</div>
+      <div id="msg" class="msg" aria-live="polite"></div>
+
+      <div class="foot">Say it right — and the stone will say it back.</div>
+    </section>
+  </main>
+
+  <script>
+    const PASSWORD = "echo";
+    const NEXT_PAGE = "level7.html";
+
+    const pw = document.getElementById("pw");
+    const msg = document.getElementById("msg");
+    const btn = document.getElementById("enterBtn");
+
+    function setMsg(text, ok=false){
+      msg.textContent = text;
+      msg.className = "msg " + (ok ? "ok" : "bad");
+    }
+
+    function check(){
+      const v = (pw.value || "").trim().toLowerCase();
+      if(!v){
+        setMsg("The stone waits. Offer a word.");
+        return;
+      }
+      if(v === PASSWORD){
+        setMsg("Accepted.", true);
+        setTimeout(()=> { window.location.href = NEXT_PAGE; }, 450);
+      } else {
+        setMsg("Wrong.", false);
+        pw.select();
+      }
+    }
+
+    btn.addEventListener("click", check);
+    pw.addEventListener("keydown", (e)=>{ if(e.key === "Enter") check(); });
+    window.addEventListener("load", ()=> pw.focus());
+  </script>
+</body>
+</html>
