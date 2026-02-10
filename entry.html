@@ -221,10 +221,28 @@
 
     .fadeOut{ animation: fade 700ms ease forwards; }
     @keyframes fade{ to{ opacity:0; transform: translateY(6px); } }
+
+    /* Ensure the mute button is always clickable above everything */
+    #muteBtn{
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 999999;
+      pointer-events: auto;
+      cursor: pointer;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.25);
+      color: rgba(255,255,255,.85);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-family: 'Cormorant Garamond', serif;
+      backdrop-filter: blur(6px);
+    }
   </style>
 </head>
 
 <body>
+
   <main class="hero">
     <div id="specters" aria-hidden="true"></div>
 
@@ -386,5 +404,148 @@
       if (e.key === "Enter") check();
     });
   </script>
+
+  <!-- Audio + Mute button placed at end so everything exists -->
+  <button id="muteBtn" aria-label="Toggle audio">🔊</button>
+
+  <audio id="mordainVoice" autoplay preload="auto">
+    <source id="mordainSrc" src="audio/mordain-whisper.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    (function () {
+      const audio = document.getElementById("mordainVoice");
+      const srcEl = document.getElementById("mordainSrc");
+      const btn = document.getElementById("muteBtn");
+      const baseSrc = "audio/mordain-whisper.mp3";
+
+      // Restore saved mute state
+      const savedMuted = localStorage.getItem("ofs_mute") === "1";
+      audio.muted = savedMuted;
+      btn.textContent = audio.muted ? "🔇" : "🔊";
+
+      // Intimate volume ceiling (no cheesy echo)
+      audio.volume = 0;
+      let v = 0;
+      const target = 0.85;
+
+      function fadeIn() {
+        v = 0;
+        audio.volume = 0;
+        const fade = setInterval(() => {
+          v += 0.02;
+          if (v >= target) { v = target; clearInterval(fade); }
+          audio.volume = v;
+        }, 120);
+      }
+
+      function restart({ bustCache } = { bustCache: true }) {
+        try {
+          audio.pause();
+          audio.currentTime = 0;
+
+          // During dev, force the browser to treat it as "fresh"
+          if (bustCache) {
+            srcEl.src = baseSrc + "?v=" + Date.now();
+            audio.load();
+          }
+
+          const p = audio.play();
+          if (p && typeof p.catch === "function") p.catch(() => {});
+          if (!audio.muted) fadeIn();
+        } catch (e) {}
+      }
+
+      // Try to restart on reload / bfcache restore
+      window.addEventListener("pageshow", () => {
+        if (!audio.muted) restart({ bustCache: true });
+      });
+
+      // If autoplay gets blocked, first tap anywhere will start it (dev-friendly)
+      window.addEventListener("pointerdown", () => {
+        if (!audio.muted && audio.paused) restart({ bustCache: false });
+      }, { once: true });
+
+      // Button toggles mute/unmute, and starts audio when unmuting
+      btn.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        localStorage.setItem("ofs_mute", audio.muted ? "1" : "0");
+        btn.textContent = audio.muted ? "🔇" : "🔊";
+
+        if (!audio.muted) {
+          restart({ bustCache: false });
+        } else {
+          audio.pause();
+        }
+      });
+    })();
+  </script>
+<script>
+(() => {
+  // Grab existing elements (works even if you pasted other scripts)
+  const audio = document.getElementById("mordainVoice");
+  const btn = document.getElementById("muteBtn");
+
+  // If either is missing, stop (prevents errors)
+  if (!audio || !btn) return;
+
+  // Make button ALWAYS clickable (even if overlays exist)
+  btn.style.position = "fixed";
+  btn.style.top = "18px";
+  btn.style.right = "18px";
+  btn.style.zIndex = "2147483647"; // maximum-ish
+  btn.style.pointerEvents = "auto";
+  btn.style.cursor = "pointer";
+
+  // Also prevent the hero overlays from stealing clicks
+  // (your ::before/::after already have pointer-events:none, this is extra safety)
+  const hero = document.querySelector(".hero");
+  if (hero) hero.style.pointerEvents = "auto";
+
+  // Restore mute state
+  const savedMuted = localStorage.getItem("ofs_mute") === "1";
+  audio.muted = savedMuted;
+  btn.textContent = audio.muted ? "🔇" : "🔊";
+
+  // Keep it intimate
+  audio.volume = 0.85;
+
+  // A hard restart that doesn't rely on missing source IDs
+  function restart() {
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+      const p = audio.play();
+      if (p && p.catch) p.catch(()=>{});
+    } catch(e) {}
+  }
+
+  // Button click: toggle mute, and if unmuting, start immediately
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    audio.muted = !audio.muted;
+    localStorage.setItem("ofs_mute", audio.muted ? "1" : "0");
+    btn.textContent = audio.muted ? "🔇" : "🔊";
+
+    if (!audio.muted) restart();
+    else audio.pause();
+  }, true);
+
+  // THIS is the dev-friendly fix for reload/autoplay:
+  // First tap anywhere will start it if browser blocked autoplay
+  window.addEventListener("pointerdown", () => {
+    if (!audio.muted && audio.paused) restart();
+  }, { once: true });
+
+  // Try on load anyway (won't hurt; may work on desktop)
+  window.addEventListener("pageshow", () => {
+    if (!audio.muted) restart();
+  });
+
+})();
+</script>
+
 </body>
 </html>
